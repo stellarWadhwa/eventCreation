@@ -32,3 +32,16 @@ body {
 .iconEvent{cursor: pointer;}
 .inputTicket, .inputCapacity{max-width: 130px;padding: 0.1rem 0.5rem; position: absolute; right: 0; padding-right: 1.5rem;}
 .editIcon{margin-left: 0.25rem;}
+.visibilitySpan {
+  transition: transform 0.5s ease; /* Define transition for transform property */
+}
+
+.visibilityAnimation {
+  animation: fadeInOut 0.5s ease; /* Apply animation */
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}

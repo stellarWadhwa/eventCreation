@@ -11,14 +11,21 @@ const [selectedImage, setSelectedImage] = useState(null);
 const [editticketfield,setEditTicketfield]=useState(false);
 const [editcapacityfield,setEditCapacityField]=useState(false);
 const [visibilityValue,setVisibilityValue]=useState("Public");
+const [visibilityAnimation, setVisibilityAnimation]=useState(true);
 
 const checkBoxRef=useRef();
 
 
 const handleChangeVisibilty=() => {
-    if(visibilityValue=="Public") setVisibilityValue("Private");
-    if(visibilityValue=="Private") setVisibilityValue("Public");
-
+    setVisibilityAnimation(false)
+    if(visibilityValue=="Public") {
+        setVisibilityValue("Private");
+        setVisibilityAnimation(true); 
+    }
+    if(visibilityValue=="Private") {
+        setVisibilityAnimation(true)
+        setVisibilityValue("Public");
+    }
 }
 const handleEditEventFields=(field)=>{
 if(field=="ticket"){
@@ -55,7 +62,7 @@ console.log(selectedImage)
         <form className='flex' onSubmit={handleSubmit}>
         <div className='pr-[3rem]'>
         <div className='py-3'>
-            <input type="text" placeholder="Event Name" className="eventname text-stone-400"/></div>
+            <input type="text" placeholder="Event Name" className="eventname text-stone-400" required/></div>
             <div className='py-3 flex items-center'>
             <CiCalendar   color='black' className='iconEvent'/>
             <label className='px-2'>Start</label>
@@ -69,7 +76,7 @@ console.log(selectedImage)
 </div>
 <div className='py-3 flex items-center'>
 <CiLocationOn color="#8d8d8d" size="22" className='iconEvent'/>
-<input type="text" placeholder="Event Location" className="eventLocation px-2 text-stone-400"/>
+<input type="text" placeholder="Event Location" className="eventLocation px-2 text-stone-400" required/>
 </div>
 <div className='py-3 text-stone-400 text-justify'>
 <span>Event Options</span>
@@ -94,13 +101,23 @@ console.log(selectedImage)
 </div></span></div>
 
 
-<div className='flex items-center pt-5 justify-between'><label className='px-2 flex items-center'><MdOutlineVisibility color='#8d8d8d' size="22" /><span className='pl-3'> Visibility:</span></label>
-<div className='flex items-center'>
-<span className='visibilitySpan pr-3'>{visibilityValue}</span>
-<div className='flex flex-col'><MdArrowDropUp color='#8d8d8d' size="22" className='iconEvent' onClick={handleChangeVisibilty}/><MdArrowDropDown color='#8d8d8d' size="22" className='iconEvent' onClick={handleChangeVisibilty}/></div></div>
+<div className='flex items-center pt-5 justify-between overflow-hidden'>
+  <label className='px-2 flex items-center'>
+    <MdOutlineVisibility color='#8d8d8d' size="22" />
+    <span className='pl-3'> Visibility:</span>
+  </label>
+  <div className='flex items-center'>
+    <span className={`visibilitySpan pr-3 ${visibilityAnimation ? 'visibilityAnimation' : ''}`}>
+      {visibilityValue}
+    </span>
+    <div className='flex flex-col'>
+      <MdArrowDropUp color='#8d8d8d' size="22" className='iconEvent' onClick={handleChangeVisibilty}/>
+      <MdArrowDropDown color='#8d8d8d' size="22" className='iconEvent' onClick={handleChangeVisibilty}/>
+    </div>
+  </div>
 </div>
 </div>
-<button type="submit" className='bg-black text-white submitbtnevent'>Create Event</button>
+<button type="submit" className='bg-black text-white submitbtnevent rounded-lg py-2 hover:bg-stone-900'>Create Event</button>
 
 </div>
 <div>
