@@ -4,6 +4,8 @@ import { CiCalendar,CiLocationOn  } from "react-icons/ci";
 import { LuTicket } from "react-icons/lu";
 import { MdOutlineReduceCapacity,MdOutlineVisibility,MdApproval,MdOutlineEdit,MdArrowDropUp, MdArrowDropDown } from "react-icons/md";
 import { TiTick } from "react-icons/ti";
+import { addEvent, selectEvents } from '../../features/eventsSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 const EventForm = () => {
 // const [startDate,setStartDate]=useState(new Date());
@@ -12,9 +14,18 @@ const [editticketfield,setEditTicketfield]=useState(false);
 const [editcapacityfield,setEditCapacityField]=useState(false);
 const [visibilityValue,setVisibilityValue]=useState("Public");
 const [visibilityAnimation, setVisibilityAnimation]=useState(true);
-
+const eventInfo=useSelector(selectEvents);
+const monthNames = [
+    "Jan", "Feb", "Mar", "April", "May", "June",
+    "July", "Aug", "Sept", "Oct", "Nov", "Dec"
+  ];
 const checkBoxRef=useRef();
+const eventNameRef=useRef();
+const eventLocationRef=useRef();
+const eventTicketRef=useRef();
+const eventCapacityRef=useRef();
 
+const dispatch=useDispatch();
 
 const handleChangeVisibilty=() => {
     setVisibilityAnimation(false)
@@ -36,8 +47,7 @@ else if(field=="capacity"){
     setEditCapacityField(!editcapacityfield);
     console.log("capacity" +editcapacityfield )
 }
-
-// console.log("dsds")    
+    
 }
 const handleImageChange = (event) => {
     const file = event.target.files[0];
@@ -48,13 +58,26 @@ const handleImageChange = (event) => {
       };
       reader.readAsDataURL(file);
     }
-console.log(selectedImage)
 
   };
+
   const handleSubmit =e=>{
     e.preventDefault();
-    console.log(checkBoxRef.current.checked)
+    const eventChecked=checkBoxRef.current.checked;
+    const eventName=eventNameRef.current.value;
+    const eventLocation=eventLocationRef.current.value;
+    const eventTicket=eventTicketRef.current.value || 'Free';
+    const eventCapacity=eventCapacityRef.current.value || 'Unlimited';
+    const eventVisibility=visibilityValue
+    dispatch(addEvent({eventChecked, eventName, eventLocation, eventTicket, eventCapacity, eventVisibility}))
+
   }
+let currentDay=new Date().getDate();
+let currentMonth=new Date().getMonth() ;
+let currentHours=new Date().getHours();
+let currentMinutes=new Date().getMinutes();
+
+console.log(monthNames[currentMonth], currentDay,currentHours, currentMinutes);
 
 
   return (
@@ -62,27 +85,31 @@ console.log(selectedImage)
         <form className='flex' onSubmit={handleSubmit}>
         <div className='pr-[3rem]'>
         <div className='py-3'>
-            <input type="text" placeholder="Event Name" className="eventname text-stone-400" required/></div>
-            <div className='py-3 flex items-center'>
+            <input type="text" placeholder="Event Name" className="eventname text-stone-400" ref={eventNameRef} required /></div>
+            <div className='py-3 flex items-center justify-between'>
             <CiCalendar   color='black' className='iconEvent'/>
-            <label className='px-2'>Start</label>
-            <input type="date" />
-            <input type="time" />
+          <div className='flex justify-between'>
+            <label className='px-2 pr-[5rem]'>Start</label>
+            {/* <input type="date" />
+            <input type="time" /> */}
+            <div className='starteventinputs'>
+            <input type="text" placeholder={monthNames[currentMonth]} />
+            <input type="number" placeholder={Math.max(0, currentDay)} />
+            <input type="number" placeholder={Math.max(0, currentHours)} />
+            <input type="number" placeholder={Math.max(0, currentMinutes)} />
+</div>
+</div>
 
-            {/* <DateTimePicker
-      showIcon
-      selected={startDate}
-      onChange={(date) => setStartDate(date)} /> */}
 </div>
 <div className='py-3 flex items-center'>
 <CiLocationOn color="#8d8d8d" size="22" className='iconEvent'/>
-<input type="text" placeholder="Event Location" className="eventLocation px-2 text-stone-400" required/>
+<input type="text" placeholder="Event Location" className="eventLocation px-2 text-stone-400" ref={eventLocationRef} required/>
 </div>
 <div className='py-3 text-stone-400 text-justify'>
 <span>Event Options</span>
 <div className='flex items-center pt-5 justify-between'><label className='px-2 flex items-center'><LuTicket color='#8d8d8d' size="22" className='iconEvent'/> <span className='pl-3'>Tickets Required:</span></label>
  <div className='flex relative'>
- {editticketfield ? (<span><input type="text" placeholder='Free' className='inputCapacity'/><TiTick  color="green" size="22" className='iconEvent editIcon relative' onClick={()=>handleEditEventFields("ticket")}/></span>):(<span className='flex'>Free<MdOutlineEdit color='#8d8d8d' size="22" className='iconEvent relative editIcon' onClick={()=>handleEditEventFields("ticket")}/></span>) }  
+ {editticketfield ? (<span><input type="text" placeholder='Free' className='inputCapacity' ref={eventTicketRef}/><TiTick  color="green" size="22" className='iconEvent editIcon relative' onClick={()=>handleEditEventFields("ticket")}/></span>):(<span className='flex'>Free<MdOutlineEdit color='#8d8d8d' size="22" className='iconEvent relative editIcon' onClick={()=>handleEditEventFields("ticket")}/></span>) }  
  </div></div> 
 
 
@@ -97,7 +124,7 @@ console.log(selectedImage)
 </div>
 <div className='flex items-center pt-5 justify-between'><label className='px-2 flex items-center'><MdOutlineReduceCapacity color='#8d8d8d' size="22" className='iconEvent'/> <span className='pl-3'>Capacity:</span></label>
 <span className='flex relative'><div className='flex '>
-{editcapacityfield ? (<span><input type="text" placeholder='Unlimited' className='inputCapacity'/><TiTick  color="green" size="22" className='iconEvent editIcon relative' onClick={()=>handleEditEventFields("capacity")}/></span>):(<span className='flex'>Unlimited <MdOutlineEdit color='#8d8d8d' size="22" className='iconEvent editIcon relative' onClick={()=>handleEditEventFields("capacity")}/></span>) }  
+{editcapacityfield ? (<span><input type="text" placeholder='Unlimited' className='inputCapacity' ref={eventCapacityRef}/><TiTick  color="green" size="22" className='iconEvent editIcon relative' onClick={()=>handleEditEventFields("capacity")}/></span>):(<span className='flex'>Unlimited <MdOutlineEdit color='#8d8d8d' size="22" className='iconEvent editIcon relative' onClick={()=>handleEditEventFields("capacity")}/></span>) }  
 </div></span></div>
 
 

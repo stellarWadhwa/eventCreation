@@ -35,7 +35,8 @@ body {
 .visibilitySpan {
   transition: transform 0.5s ease; /* Define transition for transform property */
 }
-
+.starteventinputs input {max-width: 40px; padding: 0.1rem 0rem;background: none;}
+.starteventinputs input:focus{outline: none;}
 .visibilityAnimation {
   animation: fadeInOut 0.5s ease; /* Apply animation */
 }
