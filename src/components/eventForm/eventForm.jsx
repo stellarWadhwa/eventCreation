@@ -1,11 +1,13 @@
 import React, { useRef, useState } from 'react'
-// import DateTimePicker from 'react-datetime-picker';
+import DatePicker from 'react-datepicker';
 import { CiCalendar,CiLocationOn  } from "react-icons/ci";
 import { LuTicket } from "react-icons/lu";
 import { MdOutlineReduceCapacity,MdOutlineVisibility,MdApproval,MdOutlineEdit,MdArrowDropUp, MdArrowDropDown } from "react-icons/md";
 import { TiTick } from "react-icons/ti";
 import { addEvent, selectEvents } from '../../features/eventsSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import 'react-datepicker/dist/react-datepicker.css';
+
 
 const EventForm = () => {
 // const [startDate,setStartDate]=useState(new Date());
@@ -14,6 +16,7 @@ const [editticketfield,setEditTicketfield]=useState(false);
 const [editcapacityfield,setEditCapacityField]=useState(false);
 const [visibilityValue,setVisibilityValue]=useState("Public");
 const [visibilityAnimation, setVisibilityAnimation]=useState(true);
+const [selectedDate, setSelectedDate] = useState(new Date());
 const eventInfo=useSelector(selectEvents);
 const monthNames = [
     "Jan", "Feb", "Mar", "April", "May", "June",
@@ -90,14 +93,23 @@ console.log(monthNames[currentMonth], currentDay,currentHours, currentMinutes);
             <CiCalendar   color='black' className='iconEvent'/>
           <div className='flex justify-between'>
             <label className='px-2 pr-[5rem]'>Start</label>
-            {/* <input type="date" />
-            <input type="time" /> */}
-            <div className='starteventinputs'>
+      
+            {/* <div className='starteventinputs'>
             <input type="text" placeholder={monthNames[currentMonth]} />
             <input type="number" placeholder={Math.max(0, currentDay)} />
             <input type="number" placeholder={Math.max(0, currentHours)} />
             <input type="number" placeholder={Math.max(0, currentMinutes)} />
-</div>
+</div> */}
+<DatePicker
+      selected={selectedDate}
+      onChange={(date) => setSelectedDate(date)}
+      showTimeSelect
+      dateFormat="MMMM d, yyyy h:mm aa"
+      timeFormat="HH:mm"
+      timeIntervals={15}
+      timeCaption="Time"
+      placeholderText="Select Date and Time"
+    />
 </div>
 
 </div>
